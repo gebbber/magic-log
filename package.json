@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/gebbber/magic-log#readme",
   "dependencies": {
-    "chalk": "^5.0.0",
+    "chalk": "^4.1.0",
     "dateformat": "^5.0.2",
     "seqappend": "^2.0.1"
   }
