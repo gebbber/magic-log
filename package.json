@@ -1,0 +1,24 @@
+{
+  "name": "magic-log",
+  "version": "0.0.1",
+  "description": "Log requests and other events to disk and to console",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gebbber/magic-log.git"
+  },
+  "author": "Gregory Everett Brandon",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gebbber/magic-log/issues"
+  },
+  "homepage": "https://github.com/gebbber/magic-log#readme",
+  "dependencies": {
+    "chalk": "^5.0.0",
+    "dateformat": "^5.0.2",
+    "seqappend": "^2.0.1"
+  }
+}
