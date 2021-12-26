@@ -152,4 +152,12 @@ function statusColor(status) {
     return chalk.bgRed('✗ ' + status); //server error
 }
 
+log.chars = {
+    check: '✓', greenCheck: chalk.green('✓'),
+    X: '✗', redX: chalk.red('✗'),
+    db: '🛢',
+    mail: '✉',
+    waiting: '…'
+}
+
 module.exports = log;
