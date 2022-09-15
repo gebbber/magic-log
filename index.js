@@ -94,7 +94,7 @@ const log = {
                 const id =
                     chalk.blueBright(userEmail || userIp) +
                     '[' +
-                    chalk.greenBright(req.hostname) +
+                    chalk.greenBright(req.site || req.hostname) +
                     ']';
 
                 log.event(
