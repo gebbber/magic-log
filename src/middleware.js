@@ -55,7 +55,7 @@ function findUser(req) {
         req.user?.email ||
         req.session?.email ||
         req?.email ||
-        req.session?.user._id ||
+        req.session?.user?._id ||
         req.session?.userId ||
         req.userId ||
         ipAddress

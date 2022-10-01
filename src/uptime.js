@@ -10,7 +10,7 @@ export default function upTime(now) {
     const s = Math.floor((u - 3600000 * h - 60000 * m) / 1000);
     const ms = Math.floor(u - 3600000 * h - 60000 * m - 1000 * s);
 
-    const hh = h ? +`${h}:` : ``;
+    const hh = h ? `${h}:` : ``;
     const mm = hh || m ? `${String(m).padStart(h ? 2 : 1, '0')}:` : ``;
     const ss = String(s).padStart(mm ? 2 : 1, '0');
     const sss = String(ms).padStart(3, '0') + (!h && !m ? 's' : '');
