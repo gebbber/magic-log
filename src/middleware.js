@@ -1,6 +1,6 @@
 import chalk from './chalk.js';
 import logEvent from './log-event.js';
-import resMessage from './res-message.js';
+import defaultMessages from './default-messages.js';
 import statusColor from './status.js';
 
 export default function middleware(req, res, next) {
@@ -17,7 +17,13 @@ export default function middleware(req, res, next) {
         return res; // to allow chaining
     };
 
-    res.message = resMessage;
+    res.message = function resMessage(status, message) {
+        const msg = message || defaultMessages[status];
+        res.log(msg);
+        res.status(status);
+        if (status === 200) res.send({ message: msg });
+        else res.send(msg);
+    };
 
     res.Error = function logError(text) {
         if (text) remarks.push(chalk.redBright(`Error: ${text}`));

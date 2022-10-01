@@ -1,12 +1,4 @@
-export default function resMessage(status, message) {
-    const msg = message || messages[status];
-    res.log(msg);
-    res.status(status);
-    if (status === 200) res.send({ message: msg });
-    else res.send(msg);
-}
-
-const messages = {
+const defaultMessages = {
     100: `Continue`,
     101: `Switching Protocols`,
     102: `Processing`,
@@ -71,3 +63,5 @@ const messages = {
     510: `Not Extended`,
     511: `Network Authentication Required`,
 };
+
+export default defaultMessages;
