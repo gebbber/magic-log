@@ -1,58 +1,74 @@
-# magic-log v0.0.1
+# magic-log v1.0.0
 
 ## Usage: (NodeJS)
+
+### Initialization, logging events, adding middleware:
+
 ```javascript
 /// server.js
-const express = require('express');
+import express from 'express';
+import { logRequests, logEvent } from 'magic-log';
+
 const app = express();
 
-const log = require('magic-log');
-require('./log-messages'); // Add custom messages
+// Log a single event
+logEvent('Starting server...');
 
-// Log an event not associated with a request:
-log.event('Starting server...');
+// Add middleware to log each request:
+app.use(logRequests);
+```
 
-// Start saving to a log file:
-log.filename('/logs/auth.log.ans');
-// Notes: 
-// - Before this declaration, it would just go
-//   to stdout
-// - Use log.filename() or log.filename(null)
-//   to go back to stdout
+### Use `req.doNotLog()` to avoid logging for a single request:
 
-// Automatically log all requests:
-app.use(log.request);
-
+```javascript
 // Cancel logging for a single request:
 app.get('/robots.txt', (req, res) => {
-    req.doNotLog(); //both work
-    res.doNotLog(); //the same
+    req.doNotLog();
     res.setStatus(404).send('not found');
-    req.doNotLog(); //works here too
 });
+```
 
+### Use `res.log(remark)` to add a remark to a given request:
+
+```javascript
 // res.log can be used to add remarks to the log entry:
 app.get('/', (req, res) => {
-    res.log('Sending "Hello World"');
+    res.log(`in 'Hello World' endpoint`);
     res.send('Hello World');
-    res.log('Sent it');
-})
-
-// res.Error can be used to conveniently:
-// - Add a remark
-// - Set status 500
-// - Send "Internal Error"
-app.get('/data', (req, res) => {
-    res.Error("No database available"); // Remark isn't sent in response
 });
 ```
 
-## Custom Messages:
+### `res.message(status, text)` can be used to send a response:
+
 ```javascript
-//log-messages.js
-const log = require('magic-log');
-const chalk = log.chalk;
+// res.message can be used to send a message:
+app.get('/user', (req, res) => {
+    // send { message: 'User logged in' } as JSON:
+    if (user) return res.message(200, 'User logged in');
 
-log.listening = (port) => log.event('Server listening on port',chalk.yellowBright(port));
-
+    // response type is plain text for all other status codes:
+    res.message(401, 'No user');
+});
 ```
+
+### Use `res.Error(text)` to handle internal errors:
+
+```javascript
+app.get('/data', (req, res) => {
+    try {
+        throw new Error('not implemented');
+    } catch (err) {
+        console.log(err);
+
+        // log message with request, and send 'Internal error':
+        res.Error(`in app.get('/data')`);
+    }
+});
+```
+
+## v1.0.0 Release Notes
+
+-   Converted to ESM modules
+-   Removed log to file; logging is to console only
+-   Upgaded to date-format v4
+-   Changed API
