@@ -1,15 +1,7 @@
-import logEvent from './log-event.js';
-import logRequests from './middleware.js';
-import chalk from './chalk.js';
-import chars from './characters.js';
+export { default as default } from './middleware.js';
 
-const log = {
-    chalk,
-    chars,
-    event: logEvent,
-    requests: logRequests,
-};
+export { default as logEvent, logError } from './log-event.js';
 
-export default log;
-
-export { chalk, chars, logEvent, logRequests };
+// helpers:
+export { default as chalk } from './chalk.js';
+export { default as chars } from './characters.js';

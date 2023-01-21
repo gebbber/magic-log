@@ -1,5 +1,5 @@
 import chalk from './chalk.js';
-import logEvent from './log-event.js';
+import logEvent, { logError } from './log-event.js';
 import defaultMessages from './default-messages.js';
 import statusColor from './status.js';
 
@@ -12,23 +12,22 @@ export default function middleware(req, res, next) {
         logThisRequest = false;
     };
 
-    res.log = (text) => {
+    res.log = text => {
         if (text) remarks.push(text);
         return res; // to allow chaining
     };
 
-    res.message = function resMessage(status, message) {
-        const msg = message || defaultMessages[status];
-        res.log(msg);
+    res.message = function resMessage(status, text) {
+        const message = text || defaultMessages[status];
+        res.log(message);
         res.status(status);
-        if (status === 200) res.send({ message: msg });
-        else res.send(msg);
+        res.send({ message });
     };
 
     res.Error = function logError(text) {
         if (text) remarks.push(chalk.redBright(`Error: ${text}`));
         res.status(500);
-        res.send('Internal Error');
+        res.send({ message: 'Internal Error' });
     };
 
     res.on('finish', () => {
@@ -41,7 +40,10 @@ export default function middleware(req, res, next) {
             const notes = remarks.join(';') || '';
             const requestTime = chalk.gray(`(${milliseconds(Date.now() - requestStartTime)})`);
 
-            logEvent(`${user}${host}`, method, url, status, requestTime, notes);
+            const data = [`${user}${host}`, method, url, status, requestTime, notes];
+
+            if (res.statusCode > 399) logError(...data);
+            else logEvent(...data);
         }
     });
 
@@ -54,7 +56,11 @@ function findUser(req) {
         req.session?.user?.email ||
         req.user?.email ||
         req.session?.email ||
-        req?.email ||
+        req.email ||
+        req.session?.user?.username ||
+        req.user?.username ||
+        req.session?.username ||
+        req.username ||
         req.session?.user?._id ||
         req.session?.userId ||
         req.userId ||

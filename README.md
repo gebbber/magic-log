@@ -1,4 +1,4 @@
-# magic-log v1.0.0
+# magic-log v1.1.0
 
 ## Usage: (NodeJS)
 
@@ -7,12 +7,16 @@
 ```javascript
 /// server.js
 import express from 'express';
-import { logRequests, logEvent } from 'magic-log';
+import logRequests, { logEvent, logError } from 'magic-log';
 
 const app = express();
 
-// Log a single event
-logEvent('Starting server...');
+try {
+    startServer();
+    logEvent('Starting server...'); // Log a single event
+} catch (err) {
+    logError('Error starting server'); // Use console.error()
+}
 
 // Add middleware to log each request:
 app.use(logRequests);
@@ -40,35 +44,24 @@ app.get('/', (req, res) => {
 
 ### `res.message(status, text)` can be used to send a response:
 
-```javascript
-// res.message can be used to send a message:
-app.get('/user', (req, res) => {
-    // send { message: 'User logged in' } as JSON:
-    if (user) return res.message(200, 'User logged in');
+`text` is logged to the server console and sent in JSON as `{message: text}`. Status codes > 399 use `console.error`; other use `console.log`.
 
-    // response type is plain text for all other status codes:
-    res.message(401, 'No user');
+```javascript
+app.get('/user', (req, res) => {
+    if (user) return res.message(200, 'User logged in');
+    // equivalent to:
+    res.status(200).log('User logged in').send({ message: 'User logged in' });
 });
 ```
 
 ### Use `res.Error(text)` to handle internal errors:
 
+`text` is logged to the server console using `console.error`, but only `{message: 'Internal Error'}` is sent.
+
 ```javascript
 app.get('/data', (req, res) => {
-    try {
-        throw new Error('not implemented');
-    } catch (err) {
-        console.log(err);
-
-        // log message with request, and send 'Internal error':
-        res.Error(`in app.get('/data')`);
-    }
+    if (internalError) return res.Error(`in app.get('/data')`);
+    // equivalent to:
+    res.status(500).log(`in app.get('/data')`).send({ message: 'Internal Error' });
 });
 ```
-
-## v1.0.0 Release Notes
-
--   Converted to ESM modules
--   Removed log to file; logging is to console only
--   Upgaded to date-format v4
--   Changed API
