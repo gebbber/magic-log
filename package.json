@@ -1,6 +1,6 @@
 {
     "name": "magic-log",
-    "version": "1.0.2",
+    "version": "1.1.0",
     "description": "Log requests and other events to disk and to console",
     "main": "src/index.js",
     "type": "module",
