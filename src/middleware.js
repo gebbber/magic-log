@@ -17,11 +17,11 @@ export default function middleware(req, res, next) {
         return res; // to allow chaining
     };
 
-    res.message = function resMessage(status, text) {
+    res.message = function resMessage(status, text, data = {}) {
         const message = text || defaultMessages[status];
         res.log(message);
         res.status(status);
-        res.send({ message });
+        res.send({ message, ...data });
     };
 
     res.Error = function logError(text) {

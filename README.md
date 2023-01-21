@@ -42,15 +42,21 @@ app.get('/', (req, res) => {
 });
 ```
 
-### `res.message(status, text)` can be used to send a response:
+### `res.message(status, text, {...data})` can be used to send a response:
 
-`text` is logged to the server console and sent in JSON as `{message: text}`. Status codes > 399 use `console.error`; other use `console.log`.
+`text` is logged to the server console and sent in JSON as `{message: text, ...data}`. Status codes > 399 use `console.error`; other use `console.log`. `data` is optional but can be an object that is added to the response object, after `message` is added. (`data.message` will then overwrite the provided `text`.)
 
 ```javascript
 app.get('/user', (req, res) => {
     if (user) return res.message(200, 'User logged in');
     // equivalent to:
     res.status(200).log('User logged in').send({ message: 'User logged in' });
+});
+
+app.get('/username', (req, res) => {
+    if (user && username) return res.message(200, `success`, { username });
+    // equivalent to:
+    res.status(200).log(`success`).send({ message: `success`, username });
 });
 ```
 
