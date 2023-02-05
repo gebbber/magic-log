@@ -26,23 +26,25 @@ export default function middleware(req, res, next) {
         const t0 = new Date();
         const result = process();
         if (!result.then) {
-            const t1 = new Date();
-            res.log(t1 - t0 + 'ms ' + (description || ''));
+            finish();
             return result;
         }
         return new Promise((resolve, reject) => {
             result
                 .then(val => {
-                    const t1 = new Date();
-                    res.log(t1 - t0 + 'ms' + (description ? ' ' + description : ''));
+                    finish();
                     return resolve(val);
                 })
                 .catch(err => {
-                    const t1 = new Date();
-                    res.log(t1 - t0 + 'ms' + (description ? ' ' + description : ''));
+                    finish();
                     return reject(err);
                 });
         });
+
+        function finish() {
+            const t1 = new Date();
+            res.log(t1 - t0 + 'ms' + (description ? ' ' + description : ''));
+        }
     };
 
     res.message = function resMessage(status, text, data = {}) {
