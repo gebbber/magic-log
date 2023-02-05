@@ -1,5 +1,5 @@
 import dateformat from 'date-format';
-import chalk from './chalk';
+import chalk from './chalk.js';
 
 let lastDateTime = '';
 
