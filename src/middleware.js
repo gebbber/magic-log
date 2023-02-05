@@ -12,10 +12,8 @@ export default function middleware(req, res, next) {
         logThisRequest = false;
     };
 
-    res.log = text => {
-        if (Array.isArray(text)) remarks.push(text.join(' '));
-        else remarks.push(String(text));
-
+    res.log = (...text) => {
+        remarks.push(text.join(' '));
         return res; // to allow chaining
     };
 
