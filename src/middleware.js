@@ -13,8 +13,36 @@ export default function middleware(req, res, next) {
     };
 
     res.log = text => {
-        if (text) remarks.push(text);
+        if (Array.isArray(text)) remarks.push(text.join(' '));
+        else remarks.push(String(text));
+
         return res; // to allow chaining
+    };
+
+    res.time = (arg1, arg2) => {
+        const process = arg2 || arg1;
+        const description = arg2 ? arg1 : '';
+
+        const t0 = new Date();
+        const result = process();
+        if (!result.then) {
+            const t1 = new Date();
+            res.log(t1 - t0 + 'ms ' + (description || ''));
+            return result;
+        }
+        return new Promise((resolve, reject) => {
+            result
+                .then(val => {
+                    const t1 = new Date();
+                    res.log(t1 - t0 + 'ms' + (description ? ' ' + description : ''));
+                    return resolve(val);
+                })
+                .catch(err => {
+                    const t1 = new Date();
+                    res.log(t1 - t0 + 'ms' + (description ? ' ' + description : ''));
+                    return reject(err);
+                });
+        });
     };
 
     res.message = function resMessage(status, text, data = {}) {
