@@ -4,13 +4,13 @@ import upTime from './uptime.js';
 let lastDateTime = '';
 
 export default function timeStamp() {
-    const now = new Date();
-    const currDateTime = dateformat('╒═════ yyyy-MM-dd hh:mm:ss (UTCO):', now);
-    const millisecs = dateformat('├SSSms', now);
+    const reqTime = new Date();
+    const currDateTime = chalk.cyan('╒═════ ') + dateformat('yyyy-MM-dd hh:mm:ss (UTCO):', reqTime);
+    const milliseconds = chalk.cyan('├') + dateformat('SSSms', reqTime);
 
     const parts = [];
-    if (currDateTime !== lastDateTime) parts.push([currDateTime, upTime(now)].join(' '));
-    parts.push(millisecs);
+    if (currDateTime !== lastDateTime) parts.push(currDateTime);
+    parts.push(milliseconds);
 
     lastDateTime = currDateTime;
 
