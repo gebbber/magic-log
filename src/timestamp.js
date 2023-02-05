@@ -1,5 +1,5 @@
 import dateformat from 'date-format';
-import upTime from './uptime.js';
+import chalk from './chalk';
 
 let lastDateTime = '';
 
