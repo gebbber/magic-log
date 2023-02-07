@@ -1,5 +1,5 @@
 import chalk from './chalk.js';
-import logEvent, { logError } from './log-event.js';
+import { logEvent, logError } from './log-event.js';
 import defaultMessages from './default-messages.js';
 import statusColor from './status.js';
 
@@ -45,14 +45,14 @@ export default function middleware(req, res, next) {
         }
     };
 
-    res.message = function resMessage(status, text, data = {}) {
+    res.message = (status, text, data = {}) => {
         const message = text || defaultMessages[status];
         res.log(message);
         res.status(status);
         res.send({ message, ...data });
     };
 
-    res.Error = function logError(text) {
+    res.Error = text => {
         if (text) remarks.push(chalk.redBright(`Error: ${text}`));
         res.status(500);
         res.send({ message: 'Internal Error' });
